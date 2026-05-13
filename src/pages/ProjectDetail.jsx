@@ -163,7 +163,7 @@ export default function ProjectDetail() {
               </a>
             )}
             <Link to="/" className="btn-outline">
-              ← Back to Portfolio
+              Back to Portfolio
             </Link>
           </div>
         </div>
