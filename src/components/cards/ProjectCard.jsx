@@ -2,16 +2,8 @@ import { Link } from "react-router-dom";
 import Badge from "../ui/Badge";
 
 export default function ProjectCard({ project }) {
-  const {
-    title,
-    subtitle,
-    description,
-    tags,
-    icon,
-    image,
-    color,
-    status,
-  } = project;
+  const { title, subtitle, description, tags, icon, image, color, status } =
+    project;
   const detailPath = project.getDetailPath();
   const previewHref = project.getPreviewHref();
   const previewLabel = project.getPreviewLabel();

@@ -29,7 +29,6 @@ export default function ProjectDetail() {
     color,
     status,
     github,
-    demo,
   } = project;
   const stackEntries = project.getStackEntries();
 
@@ -161,16 +160,6 @@ export default function ProjectDetail() {
                 className="btn-primary"
               >
                 View on GitHub
-              </a>
-            )}
-            {demo && (
-              <a
-                href={demo}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-outline"
-              >
-                Live Demo ↗
               </a>
             )}
             <Link to="/" className="btn-outline">
