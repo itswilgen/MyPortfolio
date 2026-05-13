@@ -23,4 +23,9 @@ export const SOCIAL_LINKS = {
   github: "https://github.com/itswilgen",
   linkedin: "https://www.linkedin.com/in/rivas-wilgen-21677a393/",
   email: "wilgenrivas123@gmail.com",
+  facebook: "https://web.facebook.com/wilgen.rivas.16",
+};
+
+export const RESUME_DOWNLOAD = {
+  href: "https://drive.google.com/uc?export=download&id=1J9sEpN552eImALrfdc2SNC_AgU0je895",
 };

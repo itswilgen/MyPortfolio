@@ -32,6 +32,30 @@ export default class Project {
     return this.id === id;
   }
 
+  matchesStatus(status) {
+    return status === "All" || this.status === status;
+  }
+
+  matchesQuery(query) {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    if (!normalizedQuery) {
+      return true;
+    }
+
+    return [
+      this.title,
+      this.subtitle,
+      this.description,
+      this.status,
+      ...this.tags,
+      ...Object.values(this.stack).flat(),
+    ]
+      .join(" ")
+      .toLowerCase()
+      .includes(normalizedQuery);
+  }
+
   hasIcon() {
     return Boolean(this.icon);
   }

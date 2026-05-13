@@ -1,4 +1,4 @@
-import { COLORS, SOCIAL_LINKS } from "../../constants/theme";
+import { COLORS, RESUME_DOWNLOAD, SOCIAL_LINKS } from "../../constants/theme";
 import { scrollToSection } from "../../utils/scrollTo";
 
 export default function Footer() {
@@ -60,6 +60,16 @@ export default function Footer() {
             Email
           </a>
         </div>
+
+        <a
+          href={RESUME_DOWNLOAD.href}
+          target="_blank"
+          rel="noreferrer"
+          className="btn-primary inline-block text-sm py-2.5 px-6 mb-6"
+          aria-label="Download Wilgen Rivas resume from Google Drive"
+        >
+          Download Resume
+        </a>
 
         <p className="text-xs" style={{ color: "rgba(232,244,253,0.3)" }}>
           © {new Date().getFullYear()} Wilgen Rivas · Tanjay City, Negros

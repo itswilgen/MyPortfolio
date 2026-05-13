@@ -1,6 +1,15 @@
 import AnimatedBar from "../ui/AnimatedBar";
 import { COLORS } from "../../constants/theme";
 
+const getLogoInitials = (label) =>
+  label
+    .split(/\s|\.|-/)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
 export default function SkillCard({ skill, inView }) {
   const logos = skill.logos || [];
 
@@ -22,9 +31,18 @@ export default function SkillCard({ skill, inView }) {
                 <img
                   src={logo.src}
                   alt={`${logo.label} logo`}
-                  className="h-full w-full object-contain"
+                  className={`skill-logo-image ${
+                    logo.label === "MariaDB" ? "skill-logo-image--mariadb" : ""
+                  }`}
                   loading="lazy"
+                  onError={(event) => {
+                    event.currentTarget.hidden = true;
+                    event.currentTarget.nextElementSibling.hidden = false;
+                  }}
                 />
+                <span className="skill-logo-fallback" hidden>
+                  {getLogoInitials(logo.label)}
+                </span>
               </span>
             ))}
           </div>

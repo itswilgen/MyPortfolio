@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/navigation/Navbar";
 import Footer from "../components/navigation/Footer";
+import ScrollTools from "../components/ui/ScrollTools";
 
 const twinkleStars = [
   { x: "9%", y: "18%", size: "16px", delay: "0s", duration: "4.6s", angle: "18deg", color: "0, 212, 255" },
@@ -50,6 +51,7 @@ export default function MainLayout() {
       </main>
 
       <Footer />
+      <ScrollTools />
     </div>
   );
 }

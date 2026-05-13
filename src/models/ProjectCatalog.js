@@ -10,6 +10,16 @@ export default class ProjectCatalog {
     return [...this.projects];
   }
 
+  getStatuses() {
+    return ["All", ...new Set(this.projects.map((project) => project.status))];
+  }
+
+  filter({ status = "All", query = "" } = {}) {
+    return this.projects.filter(
+      (project) => project.matchesStatus(status) && project.matchesQuery(query)
+    );
+  }
+
   findById(id) {
     return this.projects.find((project) => project.matchesId(id)) ?? null;
   }

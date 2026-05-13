@@ -10,6 +10,14 @@ export class ProjectController {
     return this.projectCatalog.getFeaturedProjects();
   }
 
+  getProjectStatuses() {
+    return this.projectCatalog.getStatuses();
+  }
+
+  getFilteredProjects(filters) {
+    return this.projectCatalog.filter(filters);
+  }
+
   getProjectById(id) {
     return this.projectCatalog.findById(id);
   }
