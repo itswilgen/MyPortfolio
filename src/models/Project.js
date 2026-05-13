@@ -81,7 +81,7 @@ export default class Project {
   }
 
   getPreviewLabel() {
-    return this.demo ? "Live Demo ↗" : "Demo Preview ↗";
+    return this.demo ? "Live Demo " : "Demo Preview ";
   }
 
   getPreviewAlt() {
