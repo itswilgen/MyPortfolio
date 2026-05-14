@@ -212,11 +212,30 @@
   }
 
   .nav-link {
-    @apply text-sm font-medium text-white/60 hover:text-accent transition-colors duration-200 pb-0.5 border-b-2 border-transparent;
+    @apply relative inline-flex items-center pb-1 text-sm font-medium text-white/60 hover:text-accent transition-colors duration-200;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    border-radius: 9999px;
+    background: #00d4ff;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 200ms ease;
+  }
+
+  .nav-link:hover::after,
+  .nav-link-active::after {
+    transform: scaleX(1);
   }
 
   .nav-link-active {
-    @apply text-accent border-accent;
+    @apply text-accent;
   }
 
   .mobile-nav-panel {

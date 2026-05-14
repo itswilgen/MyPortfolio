@@ -36,19 +36,6 @@ export default function ProjectDetail() {
     <div className="min-h-screen pt-28 pb-24">
       <div className="section-container">
         <div className="mx-auto w-full max-w-[1440px]">
-          {/* Back link */}
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm font-medium mb-8 transition-colors duration-200"
-            style={{ color: "rgba(232,244,253,0.5)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = COLORS.accent)}
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.color = "rgba(232,244,253,0.5)")
-            }
-          >
-            ← Back to Portfolio
-          </Link>
-
           {/* Header */}
           <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">
             <div className="flex items-center gap-4">

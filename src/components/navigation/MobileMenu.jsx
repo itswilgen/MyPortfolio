@@ -1,4 +1,5 @@
 import { NAV_LINKS } from "../../constants/theme";
+import { getSectionId } from "../../utils/scrollTo";
 
 export default function MobileMenu({ open, onClose, onNav, activeSection }) {
   return (
@@ -20,12 +21,16 @@ export default function MobileMenu({ open, onClose, onNav, activeSection }) {
         {NAV_LINKS.map((link) => (
           <button
             key={link}
+            type="button"
             onClick={() => onNav(link)}
-            className={`text-left py-3 px-4 rounded-lg text-sm font-semibold transition-colors duration-200
+            aria-current={
+              activeSection === getSectionId(link) ? "location" : undefined
+            }
+            className={`border-l-2 text-left py-3 px-4 rounded-lg text-sm font-semibold transition-colors duration-200
                         ${
-                          activeSection === link.toLowerCase()
-                            ? "text-accent bg-accent/10"
-                            : "text-white/70 hover:text-white hover:bg-white/5"
+                          activeSection === getSectionId(link)
+                            ? "border-accent text-accent bg-accent/10"
+                            : "border-transparent text-white/70 hover:text-white hover:bg-white/5"
                         }`}
           >
             {link}

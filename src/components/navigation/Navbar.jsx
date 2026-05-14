@@ -1,37 +1,83 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { NAV_LINKS } from "../../constants/theme";
-import { scrollToSection } from "../../utils/scrollTo";
+import { getSectionId, scrollToSection } from "../../utils/scrollTo";
 import { useActiveSection } from "../../hooks/useActiveSection";
 import MobileMenu from "./MobileMenu";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const activeSection = useActiveSection();
   const location = useLocation();
   const navigate = useNavigate();
-  const currentSection = location.pathname.startsWith("/projects")
-    ? "projects"
-    : activeSection;
+  const isHomePage = location.pathname === "/";
+  const activeSection = useActiveSection(isHomePage);
+  const [clickedSection, setClickedSection] = useState(null);
+  const currentSection =
+    clickedSection ||
+    (location.pathname.startsWith("/projects")
+      ? "projects"
+      : isHomePage
+        ? activeSection
+        : null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNav = (link) => {
-    const scroll = () => scrollToSection(link);
+  useEffect(() => {
+    if (!isHomePage || !location.hash) return undefined;
 
-    if (location.pathname !== "/") {
-      navigate("/");
-      window.setTimeout(scroll, 60);
-    } else {
-      scroll();
+    const sectionId = decodeURIComponent(location.hash.replace("#", ""));
+    const isKnownSection = NAV_LINKS.map(getSectionId).includes(sectionId);
+    if (!isKnownSection) return undefined;
+
+    setClickedSection(sectionId);
+
+    const scrollId = window.setTimeout(() => {
+      scrollToSection(sectionId);
+    }, 0);
+
+    return () => window.clearTimeout(scrollId);
+  }, [isHomePage, location.hash]);
+
+  useEffect(() => {
+    if (!clickedSection) return undefined;
+
+    if (activeSection === clickedSection) {
+      setClickedSection(null);
+      return undefined;
     }
 
+    const clearId = window.setTimeout(() => {
+      setClickedSection((section) =>
+        section === clickedSection ? null : section
+      );
+    }, 1200);
+
+    return () => window.clearTimeout(clearId);
+  }, [activeSection, clickedSection]);
+
+  const handleNav = (link) => {
+    const sectionId = getSectionId(link);
+    const hash = `#${sectionId}`;
+
+    setClickedSection(sectionId);
     setMenuOpen(false);
+
+    if (!isHomePage) {
+      navigate({ pathname: "/", hash });
+      return;
+    }
+
+    if (location.hash !== hash) {
+      navigate({ pathname: "/", hash });
+    }
+
+    window.requestAnimationFrame(() => scrollToSection(sectionId));
   };
 
   return (
@@ -42,9 +88,12 @@ export default function Navbar() {
         <div className="section-container flex items-center justify-between h-[68px]">
           {/* Logo */}
           <Link
-            to="/"
+            to="/#home"
             className="brand-logo"
-            onClick={() => handleNav("Home")}
+            onClick={(event) => {
+              event.preventDefault();
+              handleNav("Home");
+            }}
           >
             WG<span className="brand-dot">.DEV</span>
           </Link>
@@ -54,9 +103,13 @@ export default function Navbar() {
             {NAV_LINKS.map((link) => (
               <button
                 key={link}
+                type="button"
                 onClick={() => handleNav(link)}
+                aria-current={
+                  currentSection === getSectionId(link) ? "location" : undefined
+                }
                 className={`nav-link ${
-                  currentSection === link.toLowerCase() ? "nav-link-active" : ""
+                  currentSection === getSectionId(link) ? "nav-link-active" : ""
                 }`}
               >
                 {link}

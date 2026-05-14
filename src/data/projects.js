@@ -17,7 +17,7 @@ export const PROJECT_RECORDS = [
     color: "#0ea5e9",
     status: "Completed",
     github: "https://github.com/itswilgen/AquaFill",
-    demo: "https://aqua-fill-dx25q11fk-wilgenrivas123-8110s-projects.vercel.app/",
+    demo: "https://aqua-fill-zeta.vercel.app/",
     features: [
       "Customer portal with order tracking",
       "Admin dashboard with analytics",

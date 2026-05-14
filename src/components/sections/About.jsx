@@ -57,22 +57,23 @@ export default function About() {
               className="text-[15px] leading-[1.85] mb-4"
               style={{ color: "rgba(232,244,253,0.65)" }}
             >
-              Currently developing real-world systems such as{" "}
-              <strong className="text-white">Whisper</strong> — an anonymous
-              confession platform — and a{" "}
+              Currently pursuing a{" "}
               <strong className="text-white">
-                Petron Inventory & Sales Management System
+                Bachelor of Science in Information Technology (BSIT)
               </strong>{" "}
-              designed for fuel station operations and management.
+              at Negros Oriental State University – Bais Campus, where I
+              continuously enhance my skills in full-stack web development,
+              software engineering, database management, and modern application
+              design.
             </p>
             <p
               className="text-[15px] leading-[1.85] mb-8"
               style={{ color: "rgba(232,244,253,0.65)" }}
             >
-              Beyond development, I have a strong passion for{" "}
-              <strong style={{ color: COLORS.gold }}>music & DJing</strong>,
+              Beyond web development, I have a strong passion for{" "}
+              <strong style={{ color: COLORS.gold }}>music and DJing</strong>,
               where creativity and rhythm influence the way I approach UI/UX
-              design, problem-solving, and digital experiences.
+              design, problem-solving, and interactive digital experiences.
             </p>
 
             {/* Meta info */}
