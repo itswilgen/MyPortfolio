@@ -5,7 +5,7 @@
 export default function Badge({ children, color = "#00d4ff", className = "" }) {
   return (
     <span
-      className={`inline-block text-[11px] font-semibold tracking-wide px-2.5 py-0.5 rounded-full border ${className}`}
+      className={`badge ${className}`}
       style={{
         color: color,
         borderColor: `${color}44`,

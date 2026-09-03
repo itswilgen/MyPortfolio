@@ -1,13 +1,19 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
+        canvas: "rgb(var(--color-canvas) / <alpha-value>)",
+        surface: "rgb(var(--color-surface) / <alpha-value>)",
+        ink: "rgb(var(--color-ink) / <alpha-value>)",
+        muted: "rgb(var(--color-muted) / <alpha-value>)",
+        line: "rgb(var(--color-line) / <alpha-value>)",
         navy: {
-          DEFAULT: "#001f3f",
-          light: "#002d5a",
-          dark: "#001428",
+          DEFAULT: "#071827",
+          light: "#102a3d",
+          dark: "#05111d",
         },
         accent: {
           DEFAULT: "#00d4ff",
@@ -19,9 +25,12 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["DM Sans", "Segoe UI", "sans-serif"],
-        display: ["Syne", "sans-serif"],
+        sans: ["Manrope", "Segoe UI", "sans-serif"],
+        display: ["Space Grotesk", "Manrope", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
+      },
+      boxShadow: {
+        soft: "0 16px 40px rgb(5 24 39 / 0.08)",
       },
       animation: {
         "fade-in": "fadeIn 0.6s ease-out forwards",

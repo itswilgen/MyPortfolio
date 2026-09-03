@@ -1,6 +1,6 @@
-import aquaFillPreview from "../components/images/AquaFill.png";
-import petronPreview from "../components/images/Petron.png";
-import whisperPreview from "../components/images/Whisper.png";
+import aquaFillPreview from "../components/images/AquaFill.webp";
+import petronPreview from "../components/images/Petron.webp";
+import whisperPreview from "../components/images/Whisper.webp";
 
 export const PROJECT_RECORDS = [
   {

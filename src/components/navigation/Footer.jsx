@@ -1,80 +1,19 @@
-import { COLORS, RESUME_DOWNLOAD, SOCIAL_LINKS } from "../../constants/theme";
-import { scrollToSection } from "../../utils/scrollTo";
+import { ArrowUp } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useSiteData } from "../../contexts/SiteDataContext";
+import { DEFAULT_PROFILE } from "../../data/profile";
 
 export default function Footer() {
+  const { profile } = useSiteData();
+  const content = profile || DEFAULT_PROFILE;
   return (
-    <footer
-      className="relative z-10 border-t py-10 text-center"
-      style={{ borderColor: "rgba(0,212,255,0.08)" }}
-    >
+    <footer className="site-footer">
       <div className="section-container">
-        <button
-          onClick={() => scrollToSection("home")}
-          className="font-display font-extrabold text-2xl mb-3 block mx-auto"
-          style={{
-            color: COLORS.accent,
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          WG<span style={{ color: COLORS.gold }}>.DEV</span>
-        </button>
-
-        <div className="flex justify-center gap-6 mb-4">
-          <a
-            href={SOCIAL_LINKS.github}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm font-medium transition-colors duration-200"
-            style={{ color: "rgba(232,244,253,0.45)" }}
-            onMouseEnter={(e) => (e.target.style.color = COLORS.accent)}
-            onMouseLeave={(e) =>
-              (e.target.style.color = "rgba(232,244,253,0.45)")
-            }
-          >
-            GitHub
-          </a>
-          <a
-            href={SOCIAL_LINKS.linkedin}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm font-medium transition-colors duration-200"
-            style={{ color: "rgba(232,244,253,0.45)" }}
-            onMouseEnter={(e) => (e.target.style.color = COLORS.accent)}
-            onMouseLeave={(e) =>
-              (e.target.style.color = "rgba(232,244,253,0.45)")
-            }
-          >
-            LinkedIn
-          </a>
-          <a
-            href={`mailto:${SOCIAL_LINKS.email}`}
-            className="text-sm font-medium transition-colors duration-200"
-            style={{ color: "rgba(232,244,253,0.45)" }}
-            onMouseEnter={(e) => (e.target.style.color = COLORS.accent)}
-            onMouseLeave={(e) =>
-              (e.target.style.color = "rgba(232,244,253,0.45)")
-            }
-          >
-            Email
-          </a>
+        <div className="footer-grid">
+          <div><span className="brand-logo">WG<span className="brand-dot">.DEV</span></span><p className="footer-copy">{content.professionalTitle}. Building clear, accessible, and dependable experiences for the web.</p></div>
+          <div className="footer-links">{content.socialLinks.github && <a href={content.socialLinks.github} target="_blank" rel="noreferrer">GitHub</a>}{content.socialLinks.linkedin && <a href={content.socialLinks.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>}<a href={`mailto:${content.email}`}>Email</a><button type="button" className="inline-flex min-h-11 items-center gap-2" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Back to top <ArrowUp size={16} /></button></div>
         </div>
-
-        <a
-          href={RESUME_DOWNLOAD.href}
-          target="_blank"
-          rel="noreferrer"
-          className="btn-primary inline-block text-sm py-2.5 px-6 mb-6"
-          aria-label="Download Wilgen Rivas resume from Google Drive"
-        >
-          Download Resume
-        </a>
-
-        <p className="text-xs" style={{ color: "rgba(232,244,253,0.3)" }}>
-          © {new Date().getFullYear()} Wilgen Rivas · Tanjay City, Negros
-          Oriental Philippines
-        </p>
+        <div className="footer-bottom"><span>© {new Date().getFullYear()} Wilgen Rivas. All rights reserved.</span><Link className="admin-link" to="/admin/login">Admin</Link></div>
       </div>
     </footer>
   );

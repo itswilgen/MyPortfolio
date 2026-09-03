@@ -1,55 +1,27 @@
-import { useState } from "react";
+import { SKILLS } from "../../data/skills";
 import PageWrapper from "../../layouts/PageWrapper";
-import SectionTitle from "../ui/SectionTitle";
-import SkillCard from "../cards/SkillCard";
-import { SKILLS, SKILL_TABS } from "../../data/skills";
-import { COLORS } from "../../constants/theme";
-import { useInView } from "../../hooks/useInView";
+
+const displayNames = { Database: "Databases", Tools: "Tools & Platforms" };
 
 export default function Skills() {
-  const [activeTab, setActiveTab] = useState(SKILL_TABS[0]);
-  const [barsRef, barsInView] = useInView(0.2);
-
   return (
-    <PageWrapper
-      id="skills"
-      className="py-24"
-      style={{ background: "rgba(0,212,255,0.015)" }}
-    >
+    <PageWrapper id="skills" className="section-block">
       <div className="section-container">
-        <SectionTitle label="Technical Skills" title="What I work with" />
-
-        {/* Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10">
-          {SKILL_TABS.map((tab) => {
-            const isActive = activeTab === tab;
-            return (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className="px-5 py-2 rounded-lg text-sm font-bold tracking-wide transition-all duration-200"
-                style={{
-                  background: isActive ? COLORS.accent : "rgba(255,255,255,0.05)",
-                  color: isActive ? COLORS.navy : "rgba(232,244,253,0.6)",
-                  border: isActive
-                    ? "none"
-                    : "1px solid rgba(255,255,255,0.08)",
-                }}
-              >
-                {tab}
-              </button>
-            );
-          })}
+        <div className="section-heading-row">
+          <div><span className="section-kicker">Capabilities</span><h2 className="section-heading">Tools chosen for the problem.</h2></div>
+          <p className="section-intro">A focused full-stack toolkit spanning interface design, application logic, data, and dependable delivery.</p>
         </div>
-
-        {/* Skill cards grid */}
-        <div
-          ref={barsRef}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-        >
-          {SKILLS[activeTab].map((skill) => (
-            <SkillCard key={skill.name} skill={skill} inView={barsInView} />
+        <div className="skill-groups">
+          {Object.entries(SKILLS).map(([group, skills]) => (
+            <section className="skill-group" key={group} aria-labelledby={`skills-${group.toLowerCase()}`}>
+              <h3 id={`skills-${group.toLowerCase()}`}>{displayNames[group] || group}</h3>
+              <div className="skill-list">{skills.map((skill) => <span className="skill-chip" key={skill.name}>{skill.name}</span>)}</div>
+            </section>
           ))}
+          <section className="skill-group" aria-labelledby="skills-design">
+            <h3 id="skills-design">UI/UX & Design</h3>
+            <div className="skill-list"><span className="skill-chip">Figma</span><span className="skill-chip">Responsive design</span><span className="skill-chip">Accessibility</span><span className="skill-chip">Interface systems</span></div>
+          </section>
         </div>
       </div>
     </PageWrapper>

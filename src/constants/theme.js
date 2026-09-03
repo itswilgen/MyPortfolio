@@ -11,7 +11,7 @@ export const COLORS = {
   textFaint: "rgba(232,244,253,0.35)",
 };
 
-export const NAV_LINKS = ["Home", "About", "Skills", "Projects", "Contact"];
+export const NAV_LINKS = ["Home", "About", "Skills", "Projects", "Client Trust", "Contact"];
 
 export const BREAKPOINTS = {
   mobile: 640,

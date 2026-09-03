@@ -1,160 +1,46 @@
-import { useParams, Link } from "react-router-dom";
-import { projectController } from "../controllers/ProjectController";
-import Badge from "../components/ui/Badge";
-import { COLORS } from "../constants/theme";
+import { ArrowLeft, ArrowUpRight, Check, Code2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import EmptyState from "../components/ui/EmptyState";
+import LoadingState from "../components/ui/LoadingState";
+import { getPublicProject } from "../services/contentService";
 
 export default function ProjectDetail() {
   const { id } = useParams();
-  const project = projectController.getProjectById(id);
+  const [state, setState] = useState({ project: null, loading: true, error: "" });
+  useEffect(() => {
+    let active = true;
+    setState({ project: null, loading: true, error: "" });
+    getPublicProject(id).then((project) => {
+      if (active) setState({ project, loading: false, error: "" });
+    }).catch((error) => {
+      if (active) setState({ project: null, loading: false, error: error.message });
+    });
+    return () => { active = false; };
+  }, [id]);
 
-  if (!project) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <h1 className="font-display text-4xl font-extrabold text-white">
-          Project not found
-        </h1>
-        <Link to="/" className="btn-primary">
-          ← Back Home
-        </Link>
-      </div>
-    );
-  }
-
-  const {
-    title,
-    subtitle,
-    longDescription,
-    tags,
-    icon,
-    color,
-    status,
-    github,
-  } = project;
-  const stackEntries = project.getStackEntries();
-
+  if (state.loading) return <div className="detail-page section-container"><LoadingState label="Loading project" /></div>;
+  if (!state.project) return <div className="detail-page section-container"><EmptyState title={state.error ? "Could not load this project" : "Project not found"} description={state.error || "This project may be unpublished or the link may be incorrect."} action={<Link className="btn-primary" to="/#projects">Back to projects</Link>} /></div>;
+  const project = state.project;
   return (
-    <div className="min-h-screen pt-28 pb-24">
+    <article className="detail-page">
       <div className="section-container">
-        <div className="mx-auto w-full max-w-[1440px]">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">
-            <div className="flex items-center gap-4">
-              {project.hasIcon() && <span className="text-5xl">{icon}</span>}
-              <div>
-                <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
-                  {title}
-                </h1>
-                <p className="text-sm font-semibold mt-1" style={{ color }}>
-                  {subtitle}
-                </p>
-              </div>
-            </div>
-            <span
-              className="text-[11px] font-bold tracking-wider px-3 py-1.5 rounded-md uppercase mt-2"
-              style={{
-                background: `${color}18`,
-                color,
-                border: `1px solid ${color}33`,
-              }}
-            >
-              {status}
-            </span>
+        <Link className="back-link" to="/#projects"><ArrowLeft size={18} /> Back to projects</Link>
+        <header className="detail-hero">
+          <div><div className="project-meta"><span className={`badge badge-${project.status?.toLowerCase().replace(/\s+/g, "-")}`}>{project.status}</span>{project.category && <span className="badge">{project.category}</span>}</div><h1>{project.title}</h1>{project.subtitle && <p className="project-subtitle">{project.subtitle}</p>}<p className="detail-summary">{project.description}</p></div>
+          <div className="flex flex-wrap gap-3 lg:justify-end">{project.demo && <a className="btn-primary" href={project.demo} target="_blank" rel="noreferrer">Live demo <ArrowUpRight size={17} /></a>}{project.github && <a className="btn-secondary" href={project.github} target="_blank" rel="noreferrer"><Code2 size={17} /> GitHub</a>}</div>
+        </header>
+        {project.image && <figure className="detail-image"><img src={project.image} alt={project.imageAlt || `${project.title} interface`} /></figure>}
+        <div className="detail-content">
+          <div>
+            {(project.problem || project.purpose) && <section className="detail-section"><h2>Problem and purpose</h2>{project.problem && <p>{project.problem}</p>}{project.purpose && <p className="mt-4">{project.purpose}</p>}</section>}
+            <section className="detail-section"><h2>Project overview</h2><p>{project.longDescription}</p></section>
+            {project.features?.length > 0 && <section className="detail-section"><h2>Key features</h2><ul className="feature-list">{project.features.map((feature) => <li key={feature}><Check size={18} className="mt-1 shrink-0 text-cyan-600 dark:text-cyan-300" />{feature}</li>)}</ul></section>}
+            {project.screenshots?.length > 0 && <section className="detail-section"><h2>Screenshots</h2><div className="screenshot-grid">{project.screenshots.map((shot) => <img key={shot.url} src={shot.url} alt={shot.alt || `${project.title} screenshot`} loading="lazy" />)}</div></section>}
           </div>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            {tags.map((tag) => (
-              <Badge key={tag} color={color}>
-                {tag}
-              </Badge>
-            ))}
-          </div>
-
-          {/* Description */}
-          <div
-            className="glass-card p-6 md:p-8 mb-10 text-[15px] md:text-base leading-[1.9]"
-            style={{
-              color: "rgba(232,244,253,0.7)",
-              borderColor: `${color}22`,
-            }}
-          >
-            {longDescription}
-          </div>
-
-          {/* Features */}
-          {project.hasFeatures() && (
-            <div className="mb-10">
-              <h2 className="font-display text-xl font-bold text-white mb-4">
-                Key Features
-              </h2>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-3">
-                {project.features.map((feature) => (
-                  <li
-                    key={feature}
-                    className="flex items-start gap-2 text-sm"
-                    style={{ color: "rgba(232,244,253,0.65)" }}
-                  >
-                    <span
-                      style={{ color: COLORS.accent }}
-                      className="mt-0.5 flex-shrink-0"
-                    >
-                      ✓
-                    </span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Tech stack */}
-          <div className="mb-8">
-            <h2 className="font-display text-xl font-bold text-white mb-4">
-              Tech Stack
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {stackEntries.map(([layer, techs]) => (
-                <div key={layer} className="glass-card p-4">
-                  <div
-                    className="text-[11px] font-bold uppercase tracking-widest mb-3"
-                    style={{ color: "rgba(232,244,253,0.35)" }}
-                  >
-                    {layer}
-                  </div>
-                  <ul className="flex flex-col gap-1">
-                    {techs.map((tech) => (
-                      <li
-                        key={tech}
-                        className="text-sm font-medium"
-                        style={{ color: "rgba(232,244,253,0.8)" }}
-                      >
-                        {tech}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Links */}
-          <div className="flex flex-wrap gap-4">
-            {github && (
-              <a
-                href={github}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-primary"
-              >
-                View on GitHub
-              </a>
-            )}
-            <Link to="/" className="btn-outline">
-              Back to Portfolio
-            </Link>
-          </div>
+          <aside className="detail-aside" aria-label="Technology stack"><h2 className="mb-5 font-display text-lg font-bold">Technology stack</h2>{Object.entries(project.stack).filter(([, values]) => values.length).map(([group, values]) => <div className="stack-group" key={group}><h3>{group}</h3><div className="tag-list mt-0">{values.map((value) => <span className="tag" key={value}>{value}</span>)}</div></div>)}</aside>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

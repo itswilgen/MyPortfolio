@@ -1,133 +1,41 @@
-import { COLORS } from "../../constants/theme";
+import { ArrowRight, BriefcaseBusiness, Code2, Download, Mail } from "lucide-react";
+import { useSiteData } from "../../contexts/SiteDataContext";
+import { DEFAULT_PROFILE } from "../../data/profile";
 import { scrollToSection } from "../../utils/scrollTo";
-import profilePhoto from "../images/profile 1.png";
 
 export default function Hero() {
+  const { profile } = useSiteData();
+  const content = profile || DEFAULT_PROFILE;
   return (
-    <section
-      id="home"
-      className="relative min-h-screen flex items-center pt-20 pb-16"
-    >
-      <div className="section-container w-full">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
-          {/* Left — copy */}
-          <div className="flex flex-col gap-6 max-w-2xl">
-            {/* Eyebrow */}
-            <div className="flex items-center gap-3">
-              <div
-                className="h-0.5 w-9 rounded-full"
-                style={{ background: COLORS.accent }}
-              />
-              <span
-                className="text-xs font-bold uppercase tracking-[0.1em]"
-                style={{ color: COLORS.accent }}
-              >
-                Full Stack Developer
-              </span>
-            </div>
-
-            {/* Headline */}
-            <h1
-              className="font-display font-extrabold leading-[1.05] tracking-tight"
-              style={{ fontSize: "clamp(40px, 6vw, 72px)" }}
-            >
-              <span className="text-white">Hi, I'm </span>
-              <span className="text-gradient">Wilgen</span>
-              <br />
-              <span
-                className="font-bold"
-                style={{
-                  fontSize: "0.72em",
-                  color: "rgba(232,244,253,0.65)",
-                }}
-              >
-                I build things for the web.
-              </span>
-            </h1>
-
-            {/* Sub-copy */}
-            <p
-              className="text-lg leading-[1.75] max-w-xl"
-              style={{ color: "rgba(232,244,253,0.6)" }}
-            >
-              I design and develop modern full-stack applications focused on
-              performance, clean architecture, and user experience. Passionate
-              about transforming ideas into scalable and impactful digital
-              solutions.
-            </p>
-
-            {/* CTA buttons */}
-            <div className="flex flex-wrap gap-4 pt-2">
-              <button
-                className="btn-primary glow-accent"
-                onClick={() => scrollToSection("projects")}
-              >
-                View My Work →
-              </button>
-              <button
-                className="btn-outline"
-                onClick={() => scrollToSection("contact")}
-              >
-                Get In Touch
-              </button>
-            </div>
-
-            {/* Quick stats */}
-            <div className="flex flex-wrap gap-8 pt-4">
-              {[
-                ["3+", "Years Learning"],
-                ["10+", "Projects Built"],
-                ["15+", "Technologies"],
-              ].map(([num, label]) => (
-                <div key={label}>
-                  <div
-                    className="font-display text-2xl font-extrabold"
-                    style={{ color: COLORS.accent }}
-                  >
-                    {num}
-                  </div>
-                  <div
-                    className="text-xs font-medium mt-0.5"
-                    style={{ color: "rgba(232,244,253,0.45)" }}
-                  >
-                    {label}
-                  </div>
-                </div>
-              ))}
-            </div>
+    <section id="home" className="hero">
+      <div className="section-container hero-grid">
+        <div>
+          <p className="eyebrow">Full-Stack Developer</p>
+          <h1>Building useful digital products with <span>clarity.</span></h1>
+          <p className="hero-copy">Hi, I’m {content.name}. {content.heroIntro}</p>
+          <div className="hero-actions">
+            <button type="button" className="btn-primary" onClick={() => scrollToSection("projects")}>
+              View my work <ArrowRight size={17} />
+            </button>
+            <a className="btn-secondary" href={`mailto:${content.email}`}><Mail size={17} /> Contact me</a>
+            {content.resumeUrl && <a className="btn-ghost" href={content.resumeUrl} target="_blank" rel="noreferrer"><Download size={17} /> Résumé</a>}
           </div>
-
-          {/* Right — portrait */}
-          <div className="w-full flex justify-center lg:flex-1">
-            <div className="portrait-motion portrait-motion--hero w-full max-w-[360px] lg:max-w-[380px] xl:max-w-[430px]">
-              <div className="portrait-frame">
-                <img
-                  src={profilePhoto}
-                  alt="Wilgen"
-                  className="portrait-image h-[420px] sm:h-[500px] lg:h-[560px]"
-                />
-                <div
-                  className="portrait-vignette"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(0,31,63,0) 58%, rgba(0,31,63,0.46) 100%)",
-                  }}
-                />
-              </div>
-            </div>
+          <div className="hero-socials" aria-label="Social links">
+            {content.socialLinks.github && <a href={content.socialLinks.github} target="_blank" rel="noreferrer"><Code2 size={18} /> GitHub</a>}
+            {content.socialLinks.linkedin && <a href={content.socialLinks.linkedin} target="_blank" rel="noreferrer"><BriefcaseBusiness size={18} /> LinkedIn</a>}
+          </div>
+          {content.heroStats?.length > 0 && (
+            <dl className="hero-stats">
+              {content.heroStats.map((stat) => <div className="hero-stat" key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></div>)}
+            </dl>
+          )}
+        </div>
+        <div className="portrait-wrap">
+          <div className="portrait-frame">
+            <img className="portrait-image" src={content.profileImageUrl} alt={`Portrait of ${content.name}`} />
+            {content.availability && <div className="portrait-caption"><span>{content.availability}</span><span className="availability-dot" aria-hidden="true" /></div>}
           </div>
         </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-40 animate-bounce"
-      >
-        <span className="text-xs font-medium text-white/60">Scroll</span>
-        <div
-          className="w-0.5 h-8 rounded-full"
-          style={{ background: "linear-gradient(to bottom, rgba(0,212,255,0.6), transparent)" }}
-        />
       </div>
     </section>
   );
