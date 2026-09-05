@@ -1,18 +1,18 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { getPublicPaymentProofs, getPublicProfile, getPublicProjects } from "../services/contentService";
+import { getPublicCertificates, getPublicPaymentProofs, getPublicProfile, getPublicProjects, getPublicSettings } from "../services/contentService";
 
 const SiteDataContext = createContext(null);
 
 export function SiteDataProvider({ children }) {
-  const [state, setState] = useState({ profile: null, projects: [], paymentProofs: [], loading: true, error: "" });
+  const [state, setState] = useState({ profile: null, projects: [], certificates: [], paymentProofs: [], settings: {}, loading: true, error: "" });
 
   const refresh = useCallback(async () => {
     setState((current) => ({ ...current, loading: true, error: "" }));
     try {
-      const [profile, projects, paymentProofs] = await Promise.all([
-        getPublicProfile(), getPublicProjects(), getPublicPaymentProofs(),
+      const [profile, projects, certificates, paymentProofs, settings] = await Promise.all([
+        getPublicProfile(), getPublicProjects(), getPublicCertificates(), getPublicPaymentProofs(), getPublicSettings(),
       ]);
-      setState({ profile, projects, paymentProofs, loading: false, error: "" });
+      setState({ profile, projects, certificates, paymentProofs, settings, loading: false, error: "" });
     } catch (error) {
       setState((current) => ({ ...current, loading: false, error: error.message }));
     }

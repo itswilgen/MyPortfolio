@@ -56,6 +56,33 @@ export const projectFromRow = (row = {}) => ({
   color: "#0891b2",
 });
 
+export const certificateFromRow = (row = {}) => ({
+  id: row.id,
+  databaseId: row.id,
+  slug: row.slug,
+  title: row.title,
+  issuer: row.issuer,
+  category: row.category,
+  description: row.description || "",
+  issueDate: row.issue_date,
+  expirationDate: row.expiration_date || "",
+  doesNotExpire: Boolean(row.does_not_expire),
+  credentialId: row.credential_id || "",
+  verificationUrl: row.verification_url || "",
+  skills: row.skills || [],
+  imageUrl: row.image_url || "",
+  imagePath: row.image_path || "",
+  pdfUrl: row.pdf_url || "",
+  pdfPath: row.pdf_path || "",
+  imageAlt: row.image_alt || "",
+  allowDownload: Boolean(row.allow_download),
+  featured: Boolean(row.is_featured),
+  published: Boolean(row.is_published),
+  displayOrder: row.display_order ?? 0,
+  createdAt: row.created_at,
+  updatedAt: row.updated_at,
+});
+
 const projectToFallback = (project, index) => ({
   ...project,
   slug: project.id,
@@ -133,4 +160,41 @@ export async function getPublicPaymentProofs() {
     imageUrl: await signPath("payment-proof-images", row.image_path),
     amount: row.show_amount ? row.amount : null,
   })));
+}
+
+async function hydrateCertificate(row) {
+  const certificate = certificateFromRow(row);
+  const needsPdf = certificate.allowDownload || !(certificate.imagePath || certificate.imageUrl);
+  return {
+    ...certificate,
+    imageUrl: certificate.imagePath
+      ? await signPath("certificate-files", certificate.imagePath)
+      : certificate.imageUrl,
+    pdfUrl: certificate.pdfPath && needsPdf
+      ? await signPath("certificate-files", certificate.pdfPath)
+      : needsPdf ? certificate.pdfUrl : "",
+  };
+}
+
+export async function getPublicCertificates() {
+  if (!isSupabaseConfigured) return [];
+  const { data, error } = await supabase
+    .from("certificates")
+    .select("*")
+    .eq("is_published", true)
+    .order("is_featured", { ascending: false })
+    .order("display_order")
+    .order("issue_date", { ascending: false });
+  if (error) return [];
+  return Promise.all((data || []).map(hydrateCertificate));
+}
+
+export async function getPublicSettings() {
+  if (!isSupabaseConfigured) return {};
+  const { data, error } = await supabase
+    .from("site_settings")
+    .select("settings")
+    .eq("id", "default")
+    .maybeSingle();
+  return error ? {} : data?.settings || {};
 }

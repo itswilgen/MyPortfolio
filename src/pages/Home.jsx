@@ -4,6 +4,7 @@ import Skills from "../components/sections/Skills";
 import Projects from "../components/sections/Projects";
 import PaymentProofs from "../components/sections/PaymentProofs";
 import Contact from "../components/sections/Contact";
+import Certificates from "../components/sections/Certificates";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <About />
       <Skills />
       <Projects />
+      <Certificates />
       <PaymentProofs />
       <Contact />
     </>

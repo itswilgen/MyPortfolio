@@ -1,4 +1,4 @@
-import { FolderKanban, Home, LogOut, Menu, ReceiptText, Settings, UserRound, X } from "lucide-react";
+import { Award, FolderKanban, Home, LogOut, Menu, ReceiptText, Settings, UserRound, X } from "lucide-react";
 import { useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import ThemeToggle from "../components/ui/ThemeToggle";
@@ -7,6 +7,7 @@ import { useAuth } from "../contexts/AuthContext";
 const links = [
   ["Dashboard", "/admin", Home, true],
   ["Projects", "/admin/projects", FolderKanban],
+  ["Certificates", "/admin/certificates", Award],
   ["Profile", "/admin/profile", UserRound],
   ["Payment proofs", "/admin/payment-proofs", ReceiptText],
   ["Settings", "/admin/settings", Settings],
