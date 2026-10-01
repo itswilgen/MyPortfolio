@@ -1,59 +1,50 @@
-import { Monitor, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
+import { flushSync } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../../contexts/ThemeContext";
 
-const options = [
-  { value: "light", label: "Light", icon: Sun },
-  { value: "dark", label: "Dark", icon: Moon },
-  { value: "system", label: "System", icon: Monitor },
-];
-
 export default function ThemeToggle({ compact = false }) {
   const { theme, setTheme } = useTheme();
-  const [open, setOpen] = useState(false);
-  const wrapperRef = useRef(null);
-  const active = options.find((item) => item.value === theme) || options[2];
-  const ActiveIcon = active.icon;
+  const [isAnimating, setIsAnimating] = useState(false);
+  const animationTimer = useRef(null);
+  const isDark = theme === "dark" || (
+    theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
+  const Icon = isDark ? Sun : Moon;
+  const nextTheme = isDark ? "light" : "dark";
 
-  useEffect(() => {
-    const close = (event) => {
-      if (!wrapperRef.current?.contains(event.target)) setOpen(false);
-    };
-    const escape = (event) => { if (event.key === "Escape") setOpen(false); };
-    document.addEventListener("pointerdown", close);
-    document.addEventListener("keydown", escape);
-    return () => { document.removeEventListener("pointerdown", close); document.removeEventListener("keydown", escape); };
-  }, []);
+  useEffect(() => () => window.clearTimeout(animationTimer.current), []);
+
+  const toggleTheme = (event) => {
+    const root = document.documentElement;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    root.style.setProperty("--theme-origin-x", `${bounds.left + bounds.width / 2}px`);
+    root.style.setProperty("--theme-origin-y", `${bounds.top + bounds.height / 2}px`);
+
+    setIsAnimating(true);
+    window.clearTimeout(animationTimer.current);
+    animationTimer.current = window.setTimeout(() => setIsAnimating(false), 560);
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (document.startViewTransition && !reducedMotion) {
+      document.startViewTransition(() => flushSync(() => setTheme(nextTheme)));
+      return;
+    }
+
+    setTheme(nextTheme);
+  };
 
   return (
-    <div className="theme-picker" ref={wrapperRef}>
-      <button
-        type="button"
-        className="icon-button"
-        aria-label={`Theme: ${active.label}. Choose theme`}
-        aria-expanded={open}
-        aria-haspopup="menu"
-        onClick={() => setOpen((value) => !value)}
-      >
-        <ActiveIcon size={18} aria-hidden="true" />
-        {!compact && <span className="sr-only">Choose theme</span>}
-      </button>
-      {open && (
-        <div className="theme-menu" role="menu" aria-label="Theme options">
-          {options.map(({ value, label, icon: Icon }) => (
-            <button
-              key={value}
-              type="button"
-              role="menuitemradio"
-              aria-checked={theme === value}
-              className={theme === value ? "is-active" : ""}
-              onClick={() => { setTheme(value); setOpen(false); }}
-            >
-              <Icon size={16} aria-hidden="true" /> {label}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+    <button
+      type="button"
+      className={`icon-button theme-toggle${isAnimating ? " is-changing" : ""}`}
+      aria-label={`Switch to ${nextTheme} mode`}
+      aria-pressed={isDark}
+      title={`Switch to ${nextTheme} mode`}
+      onClick={toggleTheme}
+    >
+      <Icon className="theme-toggle-icon" size={18} aria-hidden="true" />
+      {!compact && <span className="sr-only">Switch to {nextTheme} mode</span>}
+    </button>
   );
 }

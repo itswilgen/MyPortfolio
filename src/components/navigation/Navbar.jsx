@@ -5,6 +5,7 @@ import { NAV_LINKS, SOCIAL_LINKS } from "../../constants/theme";
 import { useActiveSection } from "../../hooks/useActiveSection";
 import { getSectionId, scrollToSection } from "../../utils/scrollTo";
 import ThemeToggle from "../ui/ThemeToggle";
+import BrandLogo from "../ui/BrandLogo";
 import MobileMenu from "./MobileMenu";
 
 export default function Navbar() {
@@ -48,7 +49,7 @@ export default function Navbar() {
   return (
     <header className={`site-nav ${scrolled ? "site-nav-scrolled" : ""}`}>
       <div className="nav-inner">
-        <Link to="/#home" className="brand-logo" onClick={(event) => { event.preventDefault(); handleNav("Home"); }}>WG<span className="brand-dot">.DEV</span></Link>
+        <Link to="/#home" className="brand-link" onClick={(event) => { event.preventDefault(); handleNav("Home"); }} aria-label="Wilgen.dev home"><BrandLogo /></Link>
         <nav className="desktop-nav" aria-label="Primary navigation">
           {NAV_LINKS.map((link) => {
             const id = getSectionId(link);

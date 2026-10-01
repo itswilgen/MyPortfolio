@@ -270,25 +270,7 @@
   .section-heading-row {
     @apply mb-10 flex flex-col justify-between gap-5 md:mb-12 md:flex-row md:items-end;
   }
-  .reveal-section {
-    opacity: 0;
-    transform: translateY(20px);
-    transition:
-      opacity 620ms ease,
-      transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .reveal-section.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .reveal-section .reveal-item {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  .reveal-section.is-visible .reveal-item {
-    animation: content-rise-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: min(calc(var(--reveal-index, 0) * 65ms + 80ms), 420ms);
-  }
+
   .btn-primary,
   .btn-secondary,
   .btn-ghost,
@@ -395,12 +377,40 @@
   .nav-inner {
     @apply mx-auto flex h-[72px] w-full max-w-[1240px] items-center gap-4 px-5 sm:px-8 lg:px-10;
   }
-  .brand-logo {
-    @apply shrink-0 font-display text-xl font-bold no-underline;
-    color: rgb(var(--color-ink));
+  .brand-link {
+    @apply inline-flex min-h-11 shrink-0 items-center rounded-md no-underline;
   }
-  .brand-dot {
-    color: var(--accent-warm);
+  .brand-logo {
+    @apply block h-14 w-[160px] shrink-0 overflow-hidden;
+  }
+  .brand-logo img {
+    @apply block h-full w-full object-contain;
+  }
+  .brand-logo-original {
+    display: block;
+  }
+  .brand-logo-light {
+    display: none;
+  }
+  :root:not(.dark) .brand-logo:not(.brand-logo-login) .brand-logo-original {
+    display: none;
+  }
+  :root:not(.dark) .brand-logo:not(.brand-logo-login) .brand-logo-light {
+    display: block;
+  }
+  .brand-logo-mobile, .brand-logo-admin {
+    @apply h-[54px] w-[154px];
+  }
+  .brand-logo-footer {
+    @apply h-[77px] w-[224px];
+  }
+  .brand-logo-login {
+    @apply h-[83px] w-[240px];
+  }
+  @media (min-width: 1024px) {
+    .site-nav .brand-logo {
+      @apply h-16 w-[184px];
+    }
   }
   .desktop-nav {
     @apply ml-auto hidden items-center gap-1 lg:flex;
@@ -488,24 +498,31 @@
   .mobile-menu-footer .btn-primary {
     @apply w-full;
   }
-  .theme-picker {
-    @apply relative;
+  .theme-toggle {
+    position: relative;
+    isolation: isolate;
+    overflow: visible;
   }
-  .theme-menu {
-    @apply absolute right-0 top-[calc(100%+8px)] z-[70] min-w-36 rounded-lg border p-1 shadow-soft;
-    border-color: rgb(var(--color-line));
-    background: rgb(var(--color-surface));
-    animation: menu-pop-in 150ms ease-out both;
-    transform-origin: top right;
+  .theme-toggle::after {
+    position: absolute;
+    z-index: -1;
+    inset: -4px;
+    border: 1px solid var(--brand);
+    border-radius: inherit;
+    content: "";
+    opacity: 0;
+    pointer-events: none;
   }
-  .theme-menu button {
-    @apply flex min-h-10 w-full items-center gap-2 rounded-md px-3 text-left text-sm font-semibold;
-    color: rgb(var(--color-muted));
+  .theme-toggle.is-changing::after {
+    animation: theme-toggle-ring 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
-  .theme-menu button:hover,
-  .theme-menu button.is-active {
-    background: rgb(var(--color-line) / 0.4);
-    color: var(--brand);
+  .theme-toggle-icon {
+    transition:
+      transform 360ms cubic-bezier(0.16, 1, 0.3, 1),
+      color 220ms ease;
+  }
+  .theme-toggle.is-changing .theme-toggle-icon {
+    animation: theme-icon-turn 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .hero {
@@ -617,10 +634,10 @@
       0 0 0 1px rgb(var(--color-line) / 0.8);
   }
   .hero-content {
-    animation: hero-content-in 700ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
+
   }
   .hero-portrait {
-    animation: hero-portrait-in 760ms cubic-bezier(0.22, 1, 0.36, 1) 160ms both;
+
     perspective: 1000px;
   }
   .portrait-frame-interactive {
@@ -2129,6 +2146,48 @@
   }
   100% {
     transform: translate3d(-24px, 24px, 0) scale(0.96);
+  }
+}
+
+@keyframes theme-toggle-ring {
+  from {
+    opacity: 0.7;
+    transform: scale(0.86);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
+@keyframes theme-icon-turn {
+  0% {
+    opacity: 0.55;
+    transform: rotate(-80deg) scale(0.72);
+  }
+  65% {
+    opacity: 1;
+    transform: rotate(18deg) scale(1.12);
+  }
+  100% {
+    transform: rotate(0) scale(1);
+  }
+}
+
+::view-transition-old(root) {
+  animation: none;
+}
+
+::view-transition-new(root) {
+  animation: theme-reveal 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--theme-origin-x, 50vw) var(--theme-origin-y, 50vh));
+  }
+  to {
+    clip-path: circle(150vmax at var(--theme-origin-x, 50vw) var(--theme-origin-y, 50vh));
   }
 }
 

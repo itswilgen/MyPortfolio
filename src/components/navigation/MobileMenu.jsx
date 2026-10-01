@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { NAV_LINKS, SOCIAL_LINKS } from "../../constants/theme";
 import { getSectionId } from "../../utils/scrollTo";
 import ThemeToggle from "../ui/ThemeToggle";
+import BrandLogo from "../ui/BrandLogo";
 
 export default function MobileMenu({ open, onClose, onNav, activeSection }) {
   const panelRef = useRef(null);
@@ -37,7 +38,7 @@ export default function MobileMenu({ open, onClose, onNav, activeSection }) {
       <button type="button" className="mobile-menu-backdrop" onClick={onClose} aria-label="Close navigation menu" />
       <aside className="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu" ref={panelRef} tabIndex={-1}>
         <div className="mobile-menu-header">
-          <span className="brand-logo">WG<span className="brand-dot">.DEV</span></span>
+          <BrandLogo className="brand-logo-mobile" />
           <button className="icon-button" type="button" onClick={onClose} aria-label="Close menu"><X size={20} /></button>
         </div>
         <nav className="mobile-menu-links">

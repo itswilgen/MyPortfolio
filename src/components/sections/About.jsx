@@ -1,7 +1,6 @@
 import {
   Briefcase,
   Compass,
-  Download,
   GraduationCap,
   MapPin,
 } from "lucide-react";
@@ -76,16 +75,6 @@ export default function About() {
               );
             })}
           </dl>
-          {content.resumeUrl && (
-            <a
-              href={content.resumeUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="btn-secondary mt-6"
-            >
-              <Download size={17} /> Download résumé
-            </a>
-          )}
         </div>
       </div>
     </PageWrapper>

@@ -1,8 +1,5 @@
 import {
   ArrowRight,
-  BriefcaseBusiness,
-  Code2,
-  Download,
   Layers,
   Mail,
   Sparkles,
@@ -68,36 +65,6 @@ export default function Hero() {
             <a className="btn-secondary" href={`mailto:${content.email}`}>
               <Mail size={17} /> Contact me
             </a>
-            {content.resumeUrl && (
-              <a
-                className="btn-ghost"
-                href={content.resumeUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Download size={17} /> Résumé
-              </a>
-            )}
-          </div>
-          <div className="hero-socials" aria-label="Social links">
-            {content.socialLinks.github && (
-              <a
-                href={content.socialLinks.github}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Code2 size={18} /> GitHub
-              </a>
-            )}
-            {content.socialLinks.linkedin && (
-              <a
-                href={content.socialLinks.linkedin}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <BriefcaseBusiness size={18} /> LinkedIn
-              </a>
-            )}
           </div>
           {content.heroStats?.length > 0 && (
             <dl className="hero-stats">
